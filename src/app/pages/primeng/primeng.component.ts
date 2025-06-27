@@ -1,39 +1,39 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AutoCompleteModule } from 'primeng/autocomplete';
-
-
+import { DataServiceService } from '../../services/data-service.service';
 @Component({
   selector: 'app-primeng',
-  imports: [FormsModule, AutoCompleteModule],
+  imports: [CommonModule, FormsModule, AutoCompleteModule],
   templateUrl: './primeng.component.html',
   styleUrl: './primeng.component.css'
 })
+
 export class PrimengComponent {
-  allCountries: string[] = ["aaa asbadaksd", "bbbbbas jhasdb kasjd"];
   selectedCountries: any[] = [];
   suggestionsCountries: string[] = [];
 
-  allAirports: string[] = ["xxx asbadaksd", "zzzzz jhasdb kasjd"];
   selectedAirports: any[] = [];
   suggestionsAirports: string[] = [];
 
+  constructor(public dataService: DataServiceService) { }
+
   searchAirports(event: any) {
       const query = event.query.toLowerCase();
-      this.suggestionsAirports = this.allAirports.filter(item => item.toLowerCase().startsWith(query) && !this.selectedAirports.includes(item));
+      this.suggestionsAirports = this.dataService.allAirports.filter(item => item.toLowerCase().startsWith(query) && !this.selectedAirports.includes(item));
   }
 
   searchCountries(event: any) {
       const query = event.query.toLowerCase();
-      this.suggestionsCountries = this.allCountries.filter(item => item.toLowerCase().startsWith(query) && !this.selectedCountries.includes(item));
+      this.suggestionsCountries = this.dataService.allCountries.filter(item => item.toLowerCase().startsWith(query) && !this.selectedCountries.includes(item));
   }
-
 
   onKeydownAirports(event: KeyboardEvent) {
     const input = event.target as HTMLInputElement;
     const val = event.key.length === 1 ? (input.value+event.key).trim().toLowerCase() : input.value.trim().toLowerCase();
 
-    this.suggestionsAirports = val == "" ? [] : this.allAirports.filter(item => item.toLowerCase().startsWith(val) && !this.selectedAirports.includes(item));
+    this.suggestionsAirports = val == "" ? [] : this.dataService.allAirports.filter(item => item.toLowerCase().startsWith(val) && !this.selectedAirports.includes(item));
 
     if(this.suggestionsAirports.length == 0)
     {
@@ -57,7 +57,7 @@ export class PrimengComponent {
     const input = event.target as HTMLInputElement;
     const val = event.key.length === 1 ? (input.value+event.key).trim().toLowerCase() : input.value.trim().toLowerCase();
 
-    this.suggestionsCountries = val == "" ? [] : this.allCountries.filter(item => item.toLowerCase().startsWith(val) && !this.selectedCountries.includes(item));
+    this.suggestionsCountries = val == "" ? [] : this.dataService.allCountries.filter(item => item.toLowerCase().startsWith(val) && !this.selectedCountries.includes(item));
 
     if(this.suggestionsCountries.length == 0)
     {
