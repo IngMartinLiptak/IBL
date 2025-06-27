@@ -19,7 +19,7 @@ export class PrimengComponent implements AfterViewInit {
 
   constructor(public dataService: DataServiceService) { }
 
-  //Ugly, but quickiest way... 
+  //Ugly, but quickiest way... why? : primeNG bug - autocomplete does not have pTemplate="selectedItems"
   ngAfterViewInit() {
     const autocompleteAirports = document.querySelector('p-autocomplete[inputid="Airports"]');
     if (autocompleteAirports) {
@@ -31,6 +31,7 @@ export class PrimengComponent implements AfterViewInit {
                                 .map(([key, value]) => `${key}: ${value}`)
                                 .join('\n');
             chip.setAttribute('title', title);
+            chip.childNodes[0].textContent+=" (" + this.dataService.allAirportsMap[label].airport+")";
           }
         });
       });
@@ -53,6 +54,7 @@ export class PrimengComponent implements AfterViewInit {
                                 .map(([key, value]) => `${key}: ${value}`)
                                 .join('\n');
             chip.setAttribute('title', title);
+            chip.childNodes[0].textContent+=" (" + this.dataService.allCountriesMap[label].country+")";
           }
         });
       });
