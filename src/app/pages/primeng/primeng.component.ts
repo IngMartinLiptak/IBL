@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AutoCompleteModule } from 'primeng/autocomplete';
@@ -10,7 +10,7 @@ import { DataServiceService } from '../../services/data-service.service';
   styleUrl: './primeng.component.css'
 })
 
-export class PrimengComponent {
+export class PrimengComponent implements AfterViewInit {
   selectedCountries: any[] = [];
   suggestionsCountries: string[] = [];
 
@@ -18,6 +18,53 @@ export class PrimengComponent {
   suggestionsAirports: string[] = [];
 
   constructor(public dataService: DataServiceService) { }
+
+  //Ugly, but quickiest way... 
+  ngAfterViewInit() {
+    const autocompleteAirports = document.querySelector('p-autocomplete[inputid="Airports"]');
+    if (autocompleteAirports) {
+      const observer = new MutationObserver(() => {
+        autocompleteAirports.querySelectorAll('p-chip[aria-label], .p-autocomplete-option').forEach((chip) => {
+          const label = chip.getAttribute('aria-label');
+          if (label && !chip.hasAttribute('title')) {
+            const title = Object.entries(this.dataService.allAirportsMap[label])
+                                .map(([key, value]) => `${key}: ${value}`)
+                                .join('\n');
+            chip.setAttribute('title', title);
+          }
+        });
+      });
+
+      observer.observe(autocompleteAirports, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['aria-label']
+      });
+    }
+
+    const autocompleteCountries = document.querySelector('p-autocomplete[inputid="Countries"]');
+    if (autocompleteCountries) {
+      const observer = new MutationObserver(() => {
+        autocompleteCountries.querySelectorAll('p-chip[aria-label], .p-autocomplete-option').forEach((chip) => {
+          const label = chip.getAttribute('aria-label');
+          if (label && !chip.hasAttribute('title')) {
+            const title = Object.entries(this.dataService.allCountriesMap[label])
+                                .map(([key, value]) => `${key}: ${value}`)
+                                .join('\n');
+            chip.setAttribute('title', title);
+          }
+        });
+      });
+
+      observer.observe(autocompleteCountries, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['aria-label']
+      });
+    }
+  }
 
   searchAirports(event: any) {
       const query = event.query.toLowerCase();
