@@ -1,1 +1,9 @@
-<p>primeng works!</p>
+<h2>PrimeNG autocomplete example</h2>
+
+<div class="card" style="width:80vw; margin: 0 auto;">
+    <label for="Airports" class="font-bold mt-8 mb-2 block">Airports</label>
+    <p-autocomplete [(ngModel)]="selectedAirports" inputId="Airports" multiple fluid [typeahead]="true" [suggestions]="suggestionsAirports" (completeMethod)="searchAirports($event)" (keydown)="onKeydownAirports($event)"/>
+
+    <label for="Countries" class="font-bold mt-8 mb-2 block">Countries</label>
+    <p-autocomplete [(ngModel)]="selectedCountries" inputId="Countries" multiple fluid [typeahead]="true" [suggestions]="suggestionsCountries" (completeMethod)="searchCountries($event)" (keydown)="onKeydownCountries($event)"/>
+</div>
