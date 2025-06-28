@@ -82,9 +82,9 @@ export class PrimengComponent implements AfterViewInit {
     const input = event.target as HTMLInputElement;
     const val = event.key.length === 1 ? (input.value+event.key).trim().toLowerCase() : input.value.trim().toLowerCase();
 
-    this.suggestionsAirports = val == "" ? [] : this.dataService.allAirports.filter(item => item.toLowerCase().startsWith(val) && !this.selectedAirports.includes(item));
+    let suggestionsAirports = val == "" ? [] : this.dataService.allAirports.filter(item => item.toLowerCase().startsWith(val) && !this.selectedAirports.includes(item));
 
-    if(this.suggestionsAirports.length == 0)
+    if(suggestionsAirports.length == 0)
     {
       event.preventDefault();
       return;
@@ -94,10 +94,9 @@ export class PrimengComponent implements AfterViewInit {
     {
       event.preventDefault();
 
-      if (!this.selectedAirports.includes(this.suggestionsAirports[0])) 
+      if (suggestionsAirports.length == 1 && !this.selectedAirports.includes(suggestionsAirports[0])) 
       {
-        this.selectedAirports = [...this.selectedAirports, this.suggestionsAirports[0]];
-        this.suggestionsAirports = [];
+        this.selectedAirports = [...this.selectedAirports, suggestionsAirports[0]];
       }
     }
   }
@@ -106,9 +105,9 @@ export class PrimengComponent implements AfterViewInit {
     const input = event.target as HTMLInputElement;
     const val = event.key.length === 1 ? (input.value+event.key).trim().toLowerCase() : input.value.trim().toLowerCase();
 
-    this.suggestionsCountries = val == "" ? [] : this.dataService.allCountries.filter(item => item.toLowerCase().startsWith(val) && !this.selectedCountries.includes(item));
+    let suggestionsCountries = val == "" ? [] : this.dataService.allCountries.filter(item => item.toLowerCase().startsWith(val) && !this.selectedCountries.includes(item));
 
-    if(this.suggestionsCountries.length == 0)
+    if(suggestionsCountries.length == 0)
     {
       event.preventDefault();
       return;
@@ -118,10 +117,9 @@ export class PrimengComponent implements AfterViewInit {
     {
       event.preventDefault();
 
-      if (!this.selectedCountries.includes(this.suggestionsCountries[0])) 
+      if (suggestionsCountries.length == 1 && !this.selectedCountries.includes(suggestionsCountries[0])) 
       {
-        this.selectedCountries = [...this.selectedCountries, this.suggestionsCountries[0]];
-        this.suggestionsCountries = [];
+        this.selectedCountries = [...this.selectedCountries, suggestionsCountries[0]];
       }
     }
   }
