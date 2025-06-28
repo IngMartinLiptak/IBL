@@ -24,7 +24,7 @@ function loadICAO(http: HttpClient, dataService: DataServiceService): () => Prom
         return obj;
       });
       dataService.csvAirportsData = json;
-      dataService.allAirports = json.map(item => item.icao);
+      dataService.allAirports = json.map(item => item.icao).filter(icao => icao).sort();
       json.forEach(item => dataService.allAirportsMap[item.icao]=item);
     });
   };
@@ -46,7 +46,7 @@ function loadWMO(http: HttpClient, dataService: DataServiceService): () => Promi
         return obj;
       });
       dataService.csvCountriesData = json;
-      dataService.allCountries = dataService.csvCountriesData.map(item => item.WMO);
+      dataService.allCountries = dataService.csvCountriesData.map(item => item.WMO).filter(who => who).sort();
       json.forEach(item => dataService.allCountriesMap[item.WMO]=item);
     });
   };

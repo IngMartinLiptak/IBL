@@ -1,1 +1,40 @@
-<p>material works!</p>
+<h2>Material autocomplete example</h2>
+
+<div class="card" style="width:80vw; margin: 0 auto;">
+    <mat-form-field class="example-chip-list" style="width: 100%;">
+        <mat-label>Airports</mat-label><br/>
+        <mat-chip-grid #chipGrid aria-label="Enter airport ICAO code">
+            <mat-chip-row  
+                title="{{getAirportTitle(airport)}}"
+                *ngFor="let airport of selectedAirports"
+                (removed)="removeAirport(airport)"
+                [editable]="true"
+                (edited)="editAirport(airport, $event)"
+                >
+                {{airport}}
+                <button matChipRemove [attr.aria-label]="'remove ' + airport"><small>✖</small></button>
+            </mat-chip-row>
+
+            <input
+                #airportInput
+                matInput 
+                placeholder="Type airport ICAO..."
+                [matChipInputFor]="chipGrid"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                (matChipInputTokenEnd)="addAirportFromInput($event)"
+                [matAutocomplete]="autoAirport"
+                style="width:100%;"
+                (input)="onInputAirports($event)"
+                (keydown)="onKeydownAirports($event)"
+            />
+            <mat-autocomplete #autoAirport="matAutocomplete" (optionSelected)="onSelectAirport($event, airportInput)">
+                <mat-option *ngFor="let airport of suggestionsAirports" [value]="airport">
+                    {{airport}} ({{ getAirport(airport).airport }})
+                </mat-option>
+            </mat-autocomplete>
+        </mat-chip-grid>
+
+    </mat-form-field>
+</div>
+
+
