@@ -96,4 +96,70 @@ export class MaterialComponent implements OnInit {
                     .join('\n');
   }
 
+  onInputCountries(event: Event) 
+  {
+    const input = event.target as HTMLInputElement;
+    const val = input.value.trim().toLowerCase();
+
+    this.suggestionsCountries = val == "" ? [] : this.dataService.allCountries.filter(item => item.toLowerCase().startsWith(val) && !this.selectedCountries.includes(item));
+
+    input.value = input.value.trim().toUpperCase();
+  }
+
+  onKeydownCountries(event: KeyboardEvent) {
+    const input = event.target as HTMLInputElement;
+    const val = event.key.length === 1 ? (input.value+event.key).trim().toLowerCase() : input.value.trim().toLowerCase();
+
+    let suggestionsCountries = val == "" ? [] : this.dataService.allCountries.filter(item => item.toLowerCase().startsWith(val) && !this.selectedCountries.includes(item));
+
+    if(suggestionsCountries.length == 0)
+    {
+      event.preventDefault();
+      return;
+    }
+
+    if ((['Space', 'Enter'].includes(event.code) || [' ', 'Enter'].includes(event.key))) 
+    {
+      event.preventDefault();
+
+      if (suggestionsCountries.length == 1 && !this.selectedCountries.includes(suggestionsCountries[0])) 
+      {
+        this.selectedCountries.push(suggestionsCountries[0]);
+        input.value = "";
+        this.suggestionsCountries = [];
+      }
+    }
+
+  }
+
+  addCountryFromInput(event: any) {
+    this.selectedCountries.push(event.value);
+    event.chipInput.clear();
+    this.suggestionsCountries = [];
+  }
+
+  removeCountry(Country: any) {
+    const index = this.selectedCountries.indexOf(Country);
+    if (index >= 0) 
+      this.selectedCountries.splice(index, 1);
+  }
+
+  editCountry(Country: any, event:any) {  }
+
+  onSelectCountry(event: MatAutocompleteSelectedEvent, inputElement: HTMLInputElement): void {
+    inputElement.value = event.option.value;
+    this.addCountryFromInput({ value: event.option.value, chipInput: { clear: () => inputElement.value = "" }});
+  }
+
+  getCountry(icao:string)
+  {
+    return this.dataService.allCountriesMap[icao];
+  }
+
+  getCountryTitle(wmo:string)
+  {
+    return Object.entries(this.dataService.allCountriesMap[wmo])
+                    .map(([key, value]) => `${key}: ${value}`)
+                    .join('\n');
+  }
 }

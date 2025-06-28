@@ -3,7 +3,7 @@
 <div class="card" style="width:80vw; margin: 0 auto;">
     <mat-form-field class="example-chip-list" style="width: 100%;">
         <mat-label>Airports</mat-label><br/>
-        <mat-chip-grid #chipGrid aria-label="Enter airport ICAO code">
+        <mat-chip-grid #airportChipGrid aria-label="Enter airport ICAO code">
             <mat-chip-row  
                 title="{{getAirportTitle(airport)}}"
                 *ngFor="let airport of selectedAirports"
@@ -19,7 +19,7 @@
                 #airportInput
                 matInput 
                 placeholder="Type airport ICAO..."
-                [matChipInputFor]="chipGrid"
+                [matChipInputFor]="airportChipGrid"
                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                 (matChipInputTokenEnd)="addAirportFromInput($event)"
                 [matAutocomplete]="autoAirport"
@@ -33,7 +33,40 @@
                 </mat-option>
             </mat-autocomplete>
         </mat-chip-grid>
+    </mat-form-field>
 
+    <mat-form-field class="example-chip-list" style="width: 100%;">
+        <mat-label>Countries</mat-label><br/>
+        <mat-chip-grid #chipGridCountry aria-label="Enter Country ICAO code">
+            <mat-chip-row  
+                title="{{getCountryTitle(Country)}}"
+                *ngFor="let Country of selectedCountries"
+                (removed)="removeCountry(Country)"
+                [editable]="true"
+                (edited)="editCountry(Country, $event)"
+                >
+                {{Country}}
+                <button matChipRemove [attr.aria-label]="'remove ' + Country"><small>✖</small></button>
+            </mat-chip-row>
+
+            <input
+                #CountryInput
+                matInput 
+                placeholder="Type Country WMO..."
+                [matChipInputFor]="chipGridCountry"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                (matChipInputTokenEnd)="addCountryFromInput($event)"
+                [matAutocomplete]="autoCountry"
+                style="width:100%;"
+                (input)="onInputCountries($event)"
+                (keydown)="onKeydownCountries($event)"
+            />
+            <mat-autocomplete #autoCountry="matAutocomplete" (optionSelected)="onSelectCountry($event, CountryInput)">
+                <mat-option *ngFor="let country of suggestionsCountries" [value]="country">
+                    {{country}} ({{ getCountry(country).country }})
+                </mat-option>
+            </mat-autocomplete>
+        </mat-chip-grid>
     </mat-form-field>
 </div>
 
