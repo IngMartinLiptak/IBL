@@ -37,7 +37,7 @@
 
     <mat-form-field class="example-chip-list" style="width: 100%;">
         <mat-label>Countries</mat-label><br/>
-        <mat-chip-grid #chipGridCountry aria-label="Enter Country ICAO code">
+        <mat-chip-grid #chipGridCountry aria-label="Enter Country WMO code">
             <mat-chip-row  
                 title="{{getCountryTitle(Country)}}"
                 *ngFor="let Country of selectedCountries"

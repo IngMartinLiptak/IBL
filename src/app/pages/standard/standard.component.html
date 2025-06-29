@@ -1,1 +1,9 @@
-<p>standard works!</p>
+<h2>Standard Angular component example</h2>
+
+<div class="card" style="width:80vw; margin: 0 auto;">
+    <label for="Airports" class="font-bold mt-8 mb-2 block">Airports</label>
+    <app-multi-input placeholder="Enter airport ICAO code" name="airport" [suggestions]="airports"></app-multi-input>
+
+    <label for="Countries" class="font-bold mt-8 mb-2 block">Countries</label>
+    <app-multi-input placeholder="Enter Country WMO code" name="country" [suggestions]="countries"></app-multi-input>
+</div>
