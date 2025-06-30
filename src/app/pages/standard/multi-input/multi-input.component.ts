@@ -9,27 +9,31 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class MultiInputComponent implements OnInit {
   @Input() placeholder:string = "Enter value";
-  @Input() attributeName:string = "name"; //parament name displayed in datalist
+  @Input() attributeName:string = ""; //parament name in datalist
+  @Input() attributeDisplayName:string = ""; //parament name displayed in () in datalist
   @Input() suggestions:any = {}; //Map format
   @Output() selected = new EventEmitter<any>();
-  id:string ="";
+  id:string =""; //Reference Input-Datalist
 
-  //suggestionsArray:string[] = [];
   selectedValues:any[] = [];
-  filteredSuggestions: any;
+  filteredSuggestions: any[] = [];
+  allFilteredSuggestions: any[] = [];
 
   constructor(){};
 
   ngOnInit() { 
     this.id = "MultiInputComponent"+Date.now(); 
-    this.filteredSuggestions = Object.assign({}, this.suggestions);
-  }
-  
-  getValue(key:any): string {
-    let val = this.suggestions?.[key]?.[this.attributeName] ?? "";
-    return val == "" ? "" : "(" + val + ")";
+    this.filteredSuggestions = this.getFilteredSuggestions("");
+    this.allFilteredSuggestions = this.filteredSuggestions.slice();
   }
 
+  getFilteredSuggestions(val:string)
+  {
+    return Object.values(this.suggestions)
+                  .filter((x:any) => x[this.attributeName]?.startsWith(val) && !this.selectedValues.includes(x[this.attributeName] || ""))
+                  .sort((a:any, b:any) => a[this.attributeName]?.localeCompare(b[this.attributeName] || ""));
+  }
+  
   getTitle(name:any)
   {
     return Object.entries(this.suggestions[name])
@@ -37,7 +41,7 @@ export class MultiInputComponent implements OnInit {
                     .join('\n');
   }
 
-   onKeydown(event: KeyboardEvent) 
+  onKeydown(event: KeyboardEvent) 
    {
     const input = event.currentTarget as HTMLInputElement;
     if (event.key==null)
@@ -46,12 +50,11 @@ export class MultiInputComponent implements OnInit {
     if ((['Space', 'Enter'].includes(event.code) || [' ', 'Enter'].includes(event.key))) 
     {
       event.preventDefault();
-      let filteredSuggestionsKeys = Object.keys(this.filteredSuggestions);
-      if (filteredSuggestionsKeys.length == 1 && !this.selectedValues.includes(filteredSuggestionsKeys[0])) 
+      if (this.filteredSuggestions.length == 1 && !this.selectedValues.includes(this.filteredSuggestions[0][this.attributeName])) 
       {
-        this.selectedValues.push(filteredSuggestionsKeys[0]);
+        this.selectedValues.push(this.filteredSuggestions[0][this.attributeName]);
         (event.currentTarget as HTMLInputElement).value="";
-        this.filteredSuggestions = Object.assign({}, this.suggestions);
+        this.filteredSuggestions = this.allFilteredSuggestions.slice();
 
         this.selected.emit(this.selectedValues);
       }
@@ -61,14 +64,9 @@ export class MultiInputComponent implements OnInit {
   onInput(event: Event){
     const input = event.currentTarget as HTMLInputElement;
 
-    let tmpSuggestions = Object.keys(this.suggestions)
-                                    .filter(key => key.toLowerCase().startsWith(input.value.toLowerCase()))
-                                    .reduce((acc, key) => {
-                                      acc[key] = this.suggestions[key];
-                                      return acc;
-                                    }, {} as any);
+    let tmpSuggestions = this.getFilteredSuggestions(input.value.toUpperCase());
 
-    if(Object.keys(tmpSuggestions).length==0)                              
+    if(tmpSuggestions.length==0)                              
     {
       input.value = input.value.slice(0, -1);
       return

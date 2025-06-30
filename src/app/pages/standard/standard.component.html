@@ -20,10 +20,10 @@
     </div>
 
     <label for="Airports" class="font-bold mt-8 mb-2 block">Airports</label>
-    <app-multi-input placeholder="Enter airport ICAO code" attributeName="airport" [suggestions]="airports" (selected)="airportsChange($event)"></app-multi-input>
+    <app-multi-input placeholder="Enter airport ICAO code" attributeName="icao" attributeDisplayName="airport" [suggestions]="airports" (selected)="airportsChange($event)"></app-multi-input>
 
     <label for="Countries" class="font-bold mt-8 mb-2 block">Countries</label>
-    <app-multi-input placeholder="Enter Country WMO code" attributeName="country" [suggestions]="countries" (selected)="countriesChange($event)"></app-multi-input>
+    <app-multi-input placeholder="Enter Country WMO code" attributeName="WMO" attributeDisplayName="country" [suggestions]="countries" (selected)="countriesChange($event)"></app-multi-input>
 
     <div style="text-align: right; margin-top: 10px;">
         <button style="margin: 20px;" (click)="UpdateTable()" [disabled]="messageTypes.length==0 || (selectedAirports.length==0 && selectedCountries.length == 0)">Create briefing</button>

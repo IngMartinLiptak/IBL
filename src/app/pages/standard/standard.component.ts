@@ -31,7 +31,6 @@ export class StandardComponent implements OnInit {
     this.tableData = null; 
   }
 
-
   airportsChange(data:any)
   {
     this.selectedAirports = data;

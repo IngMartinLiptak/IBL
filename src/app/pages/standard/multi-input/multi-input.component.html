@@ -9,7 +9,7 @@
 </div>
 
 <datalist id="multiInputDatalist-{{id}}" >
-    <option *ngFor="let o of filteredSuggestions | keyvalue" [value]="o.key">{{o.key}} {{getValue(o.key)}}</option>
+    <option *ngFor="let s of filteredSuggestions" [value]="s[attributeName]">{{s[attributeName]}} ({{s[attributeDisplayName]}})</option>
 </datalist>
 
 
