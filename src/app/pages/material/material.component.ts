@@ -1,22 +1,30 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import {MatChipEditedEvent, MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatIconModule} from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
+import { ApiServiceService } from '../../services/api-service.service';
 import { DataServiceService } from '../../services/data-service.service';
 
 @Component({
   selector: 'app-material',
-  imports: [CommonModule, FormsModule, MatFormFieldModule, MatChipsModule, MatIconModule,MatAutocompleteModule, ReactiveFormsModule ],
+  imports: [CommonModule, FormsModule, MatFormFieldModule, MatChipsModule, MatIconModule,MatAutocompleteModule, ReactiveFormsModule, MatCheckboxModule, MatTableModule, MatCardModule ],
   templateUrl: './material.component.html',
   styleUrl: './material.component.css'
 })
 export class MaterialComponent implements OnInit {
-  //separatorKeysCodes: number[] = [ENTER, COMMA];
+  messageTypesMap: { [key: string]: boolean } = {
+    METAR: false,
+    SIGMET: false,
+    TAF_LONGTAF: false
+  };
+
   separatorKeysCodes: number[] = [];
 
   selectedCountries: any[] = [];
@@ -25,9 +33,14 @@ export class MaterialComponent implements OnInit {
   selectedAirports: any[] = [];
   suggestionsAirports: string[] = [];
 
-  constructor(public dataService: DataServiceService) { }
+  tableData: any = null;
+  errorMessage: string = "";
 
-  ngOnInit() {  }
+  constructor(public dataService: DataServiceService, public apiService: ApiServiceService) { }
+
+  ngOnInit() { 
+    this.tableData = null; 
+  }
 
   onInputAirports(event: Event) 
   {
@@ -161,5 +174,44 @@ export class MaterialComponent implements OnInit {
     return Object.entries(this.dataService.allCountriesMap[wmo])
                     .map(([key, value]) => `${key}: ${value}`)
                     .join('\n');
+  }
+
+  UpdateTable()
+  {
+    this.errorMessage = "";
+
+    let reqRPC = {
+      "id": "query" + Date.now(),
+      "method": "query",
+      "params": [
+        {
+          "id": "briefing02", 
+          "reportTypes": Object.entries(this.messageTypesMap).filter(([_, checked]) => checked).map(([type]) => type),
+          "stations":this.selectedAirports,
+          "countries": this.selectedCountries
+        }
+      ]
+    };
+
+    this.apiService.PostData(reqRPC).subscribe(response => {
+      console.log("API response: ", response);
+      if(response.error == null)
+      {
+        response.result.forEach((r:any) => r.textCustomHTML = this.dataService.GetCustomHTML(r.text));
+
+        this.tableData = response.result.reduce((acc: Record<string, typeof response.result>, item: any) => {
+          if (!acc[item.stationId]) 
+            acc[item.stationId] = [];
+          acc[item.stationId].push(item);
+          return acc;
+        }, {} as Record<string, typeof response.result>);
+      }
+      else
+        this.errorMessage = "API Error:\n" + JSON.stringify(response.error);  
+    },
+    error => {
+      console.error("API Error:", error);
+      this.errorMessage = "API Error:\n" + JSON.stringify(error);
+    });
   }
 }

@@ -1,11 +1,11 @@
-import { APP_INITIALIZER, ApplicationConfig, inject, provideZoneChangeDetection } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { providePrimeNG } from 'primeng/config';
-import Aura from '@primeng/themes/aura';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import Aura from '@primeng/themes/aura';
+import { providePrimeNG } from 'primeng/config';
 import { DataServiceService } from './services/data-service.service';
 
 function loadICAO(http: HttpClient, dataService: DataServiceService): () => Promise<void> {
@@ -24,7 +24,7 @@ function loadICAO(http: HttpClient, dataService: DataServiceService): () => Prom
         return obj;
       });
       dataService.csvAirportsData = json;
-      dataService.allAirports = json.map(item => item.icao).filter(icao => icao).sort();
+      dataService.allAirports = json.map(item => item.icao).filter(icao => icao && icao.length === 4).sort(); 
       json.forEach(item => dataService.allAirportsMap[item.icao]=item);
     });
   };

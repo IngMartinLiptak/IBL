@@ -1,7 +1,14 @@
-<h2>Material autocomplete example</h2>
+<h2 style="text-align: center;">Material autocomplete example</h2>
 
 <div class="card" style="width:80vw; margin: 0 auto;">
-    <mat-form-field class="example-chip-list" style="width: 100%;">
+    <mat-label style="margin-left: 10px;">Message types</mat-label>
+    <div style="display: flex; align-items: center; gap: 16px;">
+        <mat-checkbox [(ngModel)]="messageTypesMap['METAR']" name="metar">METAR</mat-checkbox>
+        <mat-checkbox [(ngModel)]="messageTypesMap['SIGMET']" name="sigmet">SIGMET</mat-checkbox>
+        <mat-checkbox [(ngModel)]="messageTypesMap['TAF_LONGTAF']" name="taf">TAF</mat-checkbox>
+    </div>
+
+    <mat-form-field class="example-chip-list" style="width: 100%; margin-top: 20px;">
         <mat-label>Airports</mat-label><br/>
         <mat-chip-grid #airportChipGrid aria-label="Enter airport ICAO code">
             <mat-chip-row  
@@ -68,6 +75,43 @@
             </mat-autocomplete>
         </mat-chip-grid>
     </mat-form-field>
+
+    <div style="text-align: right; margin-top: 10px;">
+        <button style="margin: 20px;" (click)="UpdateTable()" [disabled]="(!messageTypesMap['METAR'] && !messageTypesMap['SIGMET'] && !messageTypesMap['TAF_LONGTAF']) || (selectedAirports.length==0 && selectedCountries.length == 0)">Create briefing</button>
+    </div>
 </div>
+
+<div *ngIf="errorMessage!=''" style="margin-top: 20px; text-align: center; color:red">{{errorMessage}}</div>
+
+<ng-container *ngIf="tableData | keyvalue as keyValues">
+  <p *ngIf="tableData!=null && keyValues.length === 0" style="margin-top: 20px; text-align: center;">No records returned.</p>
+</ng-container>
+
+<div style="width: 80vw; margin: 20px auto;">
+
+<table mat-table [dataSource]="tableData | keyvalue">
+    <ng-container matColumnDef="key">
+        <td mat-cell *matCellDef="let element">
+            <div style="background-color:#F5F5F5;padding:8px 12px;color:rgba(0,0,0,0.87);font-family:Roboto,'Helvetica Neue',sans-serif; line-height: 40px; font-weight: bold;">{{ element.key }}</div>
+            <table mat-table [dataSource]="element.value">
+                <ng-container matColumnDef="queryType">
+                    <td mat-cell *matCellDef="let v" style="width:200px">{{ v.queryType }}</td>
+                </ng-container>
+                <ng-container matColumnDef="reportTime">
+                    <td mat-cell *matCellDef="let v" style="width:200px">{{ v.reportTime | date: 'dd. MM. yyyy HH:mm:ss' }}</td>
+                </ng-container>
+                <ng-container matColumnDef="textCustomHTML">
+                    <td mat-cell *matCellDef="let v" [innerHTML]="v.textCustomHTML">
+                    </td>
+                </ng-container>
+
+                <tr mat-row *matRowDef="let row; columns: ['queryType', 'reportTime', 'textCustomHTML']"></tr>
+            </table>
+        </td>
+    </ng-container>
+    <tr mat-row *matRowDef="let row; columns: ['key'];"></tr>
+</table>
+
+
 
 
