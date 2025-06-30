@@ -1,5 +1,5 @@
-<div class="multi-input-container" style="width: 50%; min-height: 70px; position: relative; padding-top: 5px; border: 1px solid silver;">
-    <span *ngFor="let sv of selectedValues,index as i"  style="margin: 8px 5px; padding:2px 5px; border:1px solid silver;">
+<div class="multi-input-container" style="width: 100%; min-height: 70px; position: relative; padding-top: 5px; border: 1px solid silver;">
+    <span *ngFor="let sv of selectedValues,index as i" style="margin: 8px 5px; padding:2px 5px; border:1px solid silver;">
         <!-- title="{{getTitle(sv)}}" -->
         {{sv}}
         <span style="cursor:pointer;" (click)="selectedValues.splice(i,1)">✖</span>
