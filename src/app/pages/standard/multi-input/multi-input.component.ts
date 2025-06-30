@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-multi-input',
@@ -9,11 +9,12 @@ import { CommonModule } from '@angular/common';
 })
 export class MultiInputComponent implements OnInit {
   @Input() placeholder:string = "Enter value";
-  @Input() name:string = "name"; //parament name displayed in datalist
+  @Input() attributeName:string = "name"; //parament name displayed in datalist
   @Input() suggestions:any = {}; //Map format
-  @Output() selectedSuggestions = new EventEmitter<any>();
+  @Output() selected = new EventEmitter<any>();
   id:string ="";
 
+  //suggestionsArray:string[] = [];
   selectedValues:any[] = [];
   filteredSuggestions: any;
 
@@ -25,7 +26,7 @@ export class MultiInputComponent implements OnInit {
   }
   
   getValue(key:any): string {
-    let val = this.suggestions?.[key]?.[this.name] ?? "";
+    let val = this.suggestions?.[key]?.[this.attributeName] ?? "";
     return val == "" ? "" : "(" + val + ")";
   }
 
@@ -36,26 +37,43 @@ export class MultiInputComponent implements OnInit {
                     .join('\n');
   }
 
-  //  onKeydown(event: KeyboardEvent) {
-  //   const input = event.target as HTMLInputElement;
-  //   const val = event.key.length === 1 ? (input.value+event.key).trim().toLowerCase() : input.value.trim().toLowerCase();
+   onKeydown(event: KeyboardEvent) 
+   {
+    const input = event.currentTarget as HTMLInputElement;
+    if (event.key==null)
+      return;
 
-  //   let suggestions = val == "" ? [] : this.suggestions.map(x=>x[this.name]).filter((item: string) => item.toLowerCase().startsWith(val) && !this.selectedValues.includes(item));
+    if ((['Space', 'Enter'].includes(event.code) || [' ', 'Enter'].includes(event.key))) 
+    {
+      event.preventDefault();
+      let filteredSuggestionsKeys = Object.keys(this.filteredSuggestions);
+      if (filteredSuggestionsKeys.length == 1 && !this.selectedValues.includes(filteredSuggestionsKeys[0])) 
+      {
+        this.selectedValues.push(filteredSuggestionsKeys[0]);
+        (event.currentTarget as HTMLInputElement).value="";
+        this.filteredSuggestions = Object.assign({}, this.suggestions);
 
-  //   if(suggestions.length == 0)
-  //   {
-  //     event.preventDefault();
-  //     return;
-  //   }
+        this.selected.emit(this.selectedValues);
+      }
+    }
+  }
 
-  //   if ((['Space', 'Enter'].includes(event.code) || [' ', 'Enter'].includes(event.key))) 
-  //   {
-  //     event.preventDefault();
+  onInput(event: Event){
+    const input = event.currentTarget as HTMLInputElement;
 
-  //     if (suggestions.length == 1 && !this.selectedAirports.includes(suggestions[0])) 
-  //     {
-  //       this.selectedAirports = [...this.selectedAirports, suggestions[0]];
-  //     }
-  //   }
-  // }
+    let tmpSuggestions = Object.keys(this.suggestions)
+                                    .filter(key => key.toLowerCase().startsWith(input.value.toLowerCase()))
+                                    .reduce((acc, key) => {
+                                      acc[key] = this.suggestions[key];
+                                      return acc;
+                                    }, {} as any);
+
+    if(Object.keys(tmpSuggestions).length==0)                              
+    {
+      input.value = input.value.slice(0, -1);
+      return
+    }
+    else
+      this.filteredSuggestions = tmpSuggestions;
+  }
 }

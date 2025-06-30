@@ -1,9 +1,60 @@
-<h2>Standard Angular component example</h2>
+<h2 style="text-align: center;">Standard Angular component example</h2>
 
 <div class="card" style="width:80vw; margin: 0 auto;">
+    <label for="MessageTypes" class="font-bold mt-8 mb-2 block">Message types</label>
+    <div style="display: flex; align-items: center; gap: 16px;">
+        <div style="display: flex; align-items: center;">
+            <input type="checkbox" id="messageTypes1" name="messageTypes" value="METAR" (change)="onCheckboxChange('METAR', $event)">
+            <label for="messageTypes1" style="margin-left: 4px;">METAR</label>
+        </div>
+
+        <div style="display: flex; align-items: center;">
+            <input type="checkbox" id="messageTypes2" name="messageTypes" value="SIGMET" (change)="onCheckboxChange('SIGMET', $event)">
+            <label for="messageTypes2" style="margin-left: 4px;">SIGMET</label>
+        </div>
+
+        <div style="display: flex; align-items: center;">
+            <input type="checkbox" id="messageTypes3" name="messageTypes" value="TAF_LONGTAF" (change)="onCheckboxChange('TAF_LONGTAF', $event)">
+            <label for="messageTypes3" style="margin-left: 4px;">TAF</label>
+        </div>
+    </div>
+
     <label for="Airports" class="font-bold mt-8 mb-2 block">Airports</label>
-    <app-multi-input placeholder="Enter airport ICAO code" name="airport" [suggestions]="airports"></app-multi-input>
+    <app-multi-input placeholder="Enter airport ICAO code" attributeName="airport" [suggestions]="airports" (selected)="airportsChange($event)"></app-multi-input>
 
     <label for="Countries" class="font-bold mt-8 mb-2 block">Countries</label>
-    <app-multi-input placeholder="Enter Country WMO code" name="country" [suggestions]="countries"></app-multi-input>
+    <app-multi-input placeholder="Enter Country WMO code" attributeName="country" [suggestions]="countries" (selected)="countriesChange($event)"></app-multi-input>
+
+    <div style="text-align: right; margin-top: 10px;">
+        <button style="margin: 20px;" (click)="UpdateTable()" [disabled]="messageTypes.length==0 || (selectedAirports.length==0 && selectedCountries.length == 0)">Create briefing</button>
+    </div>
 </div>
+
+<div *ngIf="errorMessage!=''" style="margin-top: 20px; text-align: center; color:red">{{errorMessage}}</div>
+
+<ng-container *ngIf="tableData | keyvalue as keyValues">
+  <p *ngIf="tableData!=null && keyValues.length === 0" style="margin-top: 20px; text-align: center;">No records returned.</p>
+</ng-container>
+
+<table cellspacing="0" cellpadding="0" style="width:80vw; margin: 20px auto;">
+    <ng-container *ngFor="let data of tableData | keyvalue">
+        <tr><td style="background-color: #F5F5F5; font-weight: bold; line-height: 40px;">{{data.key}}</td></tr>
+        <tr>
+            <td>
+                <table cellspacing="0" cellpadding="0">
+                    <tr *ngFor="let v of GetDataValue(data.value)">
+                        <td style="width:200px">
+                            {{v.queryType}}
+                        </td>
+                        <td style="width:200px">
+                            {{v.reportTime | date:"dd. MM. yyyy hh:mm:ss"}}
+                        </td>
+                        <td [innerHTML]="v.textCustomHTML">
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </ng-container>
+
+</table>
