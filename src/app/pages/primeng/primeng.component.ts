@@ -156,6 +156,7 @@ export class PrimengComponent implements OnInit, AfterViewInit {
       console.log("API response: ", response);
       if(response.error == null)
       {
+        this.errorMessage = "";
         response.result.forEach((r:any) => r.textCustomHTML = this.dataService.GetCustomHTML(r.text));
 
         this.tableData = response.result.reduce((acc: Record<string, typeof response.result>, item: any) => {
