@@ -1,4 +1,5 @@
-<h2 style="text-align: center;">PrimeNG autocomplete example</h2>
+<h2 class="PageHeader">PrimeNG autocomplete example</h2>
+<button style="position: absolute; top:10px; right:20px; cursor:pointer;" [routerLink]="['/Home']">X</button>
 
 <div class="card" style="width:80vw; margin: 0 auto;">
     <label for="MessageTypes" class="font-bold mt-8 mb-2 block">Message types</label>
@@ -36,7 +37,7 @@
   <p *ngIf="tableData!=null && keyValues.length === 0" style="margin-top: 20px; text-align: center;">No records returned.</p>
 </ng-container>
 
-<p-table #dt1 [value]="tableData | keyvalue" dataKey="key" [rows]="1000" [rowHover]="true" styleClass="p-datatable-gridlines" responsiveLayout="scroll" [style]="{ 'width':'80vw', 'margin': '20px auto' }">
+<p-table #dt1 [value]="tableData | keyvalue" dataKey="key" [rows]="1000" [rowHover]="true" styleClass="p-datatable-gridlines" responsiveLayout="scroll" [style]="{ 'width':'80vw', 'margin': '20px auto', 'background-color':'white' }">
     <ng-template pTemplate="body" let-r>
         <tr><td style="background-color: #F5F5F5; font-weight: bold;">{{r.key}}</td></tr>
         <tr>

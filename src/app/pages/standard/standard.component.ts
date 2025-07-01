@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 import { ApiServiceService } from '../../services/api-service.service';
 import { DataServiceService } from '../../services/data-service.service';
@@ -7,7 +8,7 @@ import { MultiInputComponent } from "./multi-input/multi-input.component";
 
 @Component({
   selector: 'app-standard',
-  imports: [CommonModule, MultiInputComponent],
+  imports: [CommonModule, MultiInputComponent, RouterModule],
   templateUrl: './standard.component.html',
   styleUrl: './standard.component.css'
 })

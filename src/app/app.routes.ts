@@ -1,11 +1,13 @@
 import { RouterModule, Routes } from '@angular/router';
-import { StandardComponent } from './pages/standard/standard.component';
 import { GraphicsComponent } from './pages/graphics/graphics.component';
-import { PrimengComponent } from './pages/primeng/primeng.component';
+import { HomeComponent } from './pages/home/home.component';
 import { MaterialComponent } from './pages/material/material.component';
+import { PrimengComponent } from './pages/primeng/primeng.component';
+import { StandardComponent } from './pages/standard/standard.component';
 
 export const routes: Routes = [
     { path:'', redirectTo: 'Home', pathMatch: 'full' }, // Toto je default
+    { path:'Home', component: HomeComponent },
     { path:'StandardComponent', component: StandardComponent },
     { path:'GraphicsComponent', component: GraphicsComponent },
     { path:'PrimengComponent', component: PrimengComponent },

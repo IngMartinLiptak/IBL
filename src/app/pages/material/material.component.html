@@ -1,4 +1,5 @@
-<h2 style="text-align: center;">Material autocomplete example</h2>
+<h2 class="PageHeader">Material autocomplete example</h2>
+<button style="position: absolute; top:10px; right:20px; cursor:pointer;" [routerLink]="['/Home']">X</button>
 
 <div class="card" style="width:80vw; margin: 0 auto;">
     <mat-label style="margin-left: 10px;">Message types</mat-label>
@@ -89,7 +90,7 @@
 
 <div style="width: 80vw; margin: 20px auto;">
 
-<table mat-table [dataSource]="tableData | keyvalue">
+<table mat-table [dataSource]="tableData | keyvalue" style="background-color: white;">
     <ng-container matColumnDef="key">
         <td mat-cell *matCellDef="let element">
             <div style="background-color:#F5F5F5;padding:8px 12px;color:rgba(0,0,0,0.87);font-family:Roboto,'Helvetica Neue',sans-serif; line-height: 40px; font-weight: bold;">{{ element.key }}</div>

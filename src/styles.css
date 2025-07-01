@@ -37,4 +37,14 @@ button:disabled {
   opacity: 0.7;
 }
 
+.PageHeader{
+  text-align: center;
+  color: #EEEEEE;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body{
+  background-color: #01132B;
+}
+
 

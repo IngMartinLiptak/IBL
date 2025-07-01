@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { Checkbox } from 'primeng/checkbox';
 import { TableModule } from 'primeng/table';
@@ -8,7 +9,7 @@ import { ApiServiceService } from '../../services/api-service.service';
 import { DataServiceService } from '../../services/data-service.service';
 @Component({
   selector: 'app-primeng',
-  imports: [CommonModule, FormsModule, AutoCompleteModule, TableModule, Checkbox],
+  imports: [CommonModule,RouterModule, FormsModule, AutoCompleteModule, TableModule, Checkbox],
   templateUrl: './primeng.component.html',
   styleUrl: './primeng.component.css'
 })

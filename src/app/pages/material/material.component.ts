@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatCardModule } from '@angular/material/card';
@@ -14,7 +15,7 @@ import { DataServiceService } from '../../services/data-service.service';
 
 @Component({
   selector: 'app-material',
-  imports: [CommonModule, FormsModule, MatFormFieldModule, MatChipsModule, MatIconModule,MatAutocompleteModule, ReactiveFormsModule, MatCheckboxModule, MatTableModule, MatCardModule ],
+  imports: [CommonModule,RouterModule, FormsModule, MatFormFieldModule, MatChipsModule, MatIconModule,MatAutocompleteModule, ReactiveFormsModule, MatCheckboxModule, MatTableModule, MatCardModule ],
   templateUrl: './material.component.html',
   styleUrl: './material.component.css'
 })
